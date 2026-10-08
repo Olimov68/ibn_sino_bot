@@ -15,7 +15,6 @@
 - **Excel hisobotlar:** openpyxl (.xlsx davomat varaqlari)
 - **Validatsiya & Sozlamalar:** Pydantic Settings
 - **Testlar:** pytest + pytest-asyncio + aiosqlite
-- **Konteynerlashtirish:** Docker Compose
 
 ---
 
@@ -24,8 +23,6 @@
 ```text
 ibnsinobot/
 ├── .env.example                  # Muhit sozlamalari namunasi
-├── docker-compose.yml            # PostgreSQL va Bot konteynerlari
-├── Dockerfile                    # Bot tasviri (Python 3.11-slim)
 ├── requirements.txt              # Python kutubxonalari
 ├── alembic.ini                   # Alembic konfiguratsiyasi
 ├── alembic/                      # Baza migratsiya skriptlari
@@ -88,47 +85,17 @@ BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrSTUvwxyz
 # Adminlarning Telegram ID lari (bir nechta bo'lsa vergul bilan ajrating)
 ADMIN_IDS=123456789,987654321
 
-# PostgreSQL ma'lumotlar bazasi URL (Docker ichida ishlatilganda)
-DATABASE_URL=postgresql+asyncpg://ibnsino:ibnsino_password@postgres:5432/ibnsino_db
-
-# PostgreSQL Docker parametrlari
-POSTGRES_USER=ibnsino
-POSTGRES_PASSWORD=ibnsino_password
-POSTGRES_DB=ibnsino_db
-POSTGRES_PORT=5432
+# Ma'lumotlar bazasi URL manzili (PostgreSQL yoki SQLite)
+# PostgreSQL: postgresql+asyncpg://ibnsino:ibnsino_password@localhost:5432/ibnsino_db
+# SQLite: sqlite+aiosqlite:///ibnsino.db
+DATABASE_URL=sqlite+aiosqlite:///ibnsino.db
 ```
 
 ---
 
-### 3-qadam: Docker Compose orqali ishga tushirish (Tavsiya etiladi)
+### 3-qadam: Botni ishga tushirish
 
-Loyiha papkasida quyidagi bitta buyruqni bajaring:
-
-```bash
-docker compose up --build -d
-```
-
-> **Eslatma:** Docker Compose avtomatik tarzda:
-> 1. PostgreSQL 16 ma'lumotlar bazasini ko'taradi va uning tayyor bo'lishini kutadi (`healthcheck`).
-> 2. Bot konteynerini quradi.
-> 3. Alembic migratsiyasini (`alembic upgrade head`) avtomatik amalga oshirib barcha jadvallar va indekslarni yaratadi.
-> 4. Bot va eslatmalar xizmatini ishga tushiradi.
-
-#### Loglarni kuzatish:
-```bash
-docker compose logs -f bot
-```
-
-#### To'xtatish:
-```bash
-docker compose down
-```
-
----
-
-### 4-qadam: Mahalliy muhitda (Local Python) ishga tushirish
-
-Agar Docker ishlatmasdan to'g'ridan-to'g'ri kompyuteringizda ishga tushirmoqchi bo'lsangiz:
+Mahalliy muhitda botni ishga tushirish uchun:
 
 1. **Virtual muhit yaratish va faollashtirish:**
    ```bash
