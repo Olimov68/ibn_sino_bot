@@ -1,0 +1,3 @@
+"""
+@ibnsinoschoolbot asosiy paketi
+"""
